@@ -1,16 +1,37 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Game Interface</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
-</body>
+    <h1>Football Game</h1>
 
+    <div class="team-section">
+        <h2>Select Teams</h2>
+        <label for="home-team">Home Team:</label>
+        <select id="home-team"></select>
+
+        <label for="away-team">Away Team:</label>
+        <select id="away-team"></select>
+    </div>
+
+    <div id="team-display" class="team-section">
+        <h2>Team Details</h2>
+        <div id="home-team-details"></div>
+        <div id="away-team-details"></div>
+    </div>
+
+    <div class="controls-section">
+        <h2>Game Controls</h2>
+        <button id="roll-dice">Roll Dice</button>
+        <div class="dice-result" id="dice-result"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
+
+
