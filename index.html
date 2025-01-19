@@ -7,38 +7,99 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Football Game</h1>
-
-    <div class="team-section">
-        <h2>Select Teams</h2>
-        <label for="home-team">Home Team:</label>
-        <select id="home-team"></select>
-
-        <label for="away-team">Away Team:</label>
-        <select id="away-team"></select>
-    </div>
-
-    <div id="team-display" class="team-section" style="display: flex; justify-content: space-between;">
-        <div id="home-team-details">
-            <h3>Home Team Roster</h3>
-            <ul id="home-team-offense"></ul>
-            <ul id="home-team-defense"></ul>
+    <div class="game-container">
+        <h1>Football Game</h1>
+        
+        <!-- Team Selection Section -->
+        <div class="team-section">
+            <h2>Select Teams</h2>
+            <div class="team-selectors">
+                <div class="team-select">
+                    <label for="home-team">Offense Team:</label>
+                    <select id="home-team"></select>
+                </div>
+                <div class="team-select">
+                    <label for="away-team">Defense Team:</label>
+                    <select id="away-team"></select>
+                </div>
+            </div>
         </div>
-        <div id="away-team-details">
-            <h3>Away Team Roster</h3>
-            <ul id="away-team-offense"></ul>
-            <ul id="away-team-defense"></ul>
+
+        <!-- Game State Display -->
+        <div class="game-state">
+            <div class="scoreboard">
+                <div id="home-team-score">0</div>
+                <div class="game-info">
+                    <div id="quarter">1st Quarter</div>
+                    <div id="time">15:00</div>
+                </div>
+                <div id="away-team-score">0</div>
+            </div>
+            
+            <div class="field-position">
+                <div id="down-and-distance">1st & 10</div>
+                <div id="yard-line">Own 20</div>
+            </div>
+        </div>
+
+        <!-- Play Results Section -->
+        <div class="play-results">
+            <h2>Last Play Results</h2>
+            <div class="dice-rolls">
+                <h3>Dice Rolls</h3>
+                <div class="roll-display">
+                    <div id="offense-die" class="die">Offense: -</div>
+                    <div id="defense-die" class="die">Defense: -</div>
+                    <div id="d12-die" class="die">D12: -</div>
+                </div>
+            </div>
+            
+            <div class="play-calls">
+                <h3>Play Calls</h3>
+                <div id="offense-play">Offense: -</div>
+                <div id="defense-play">Defense: -</div>
+            </div>
+            
+            <div id="play-result" class="play-outcome">
+                <h3>Outcome</h3>
+                <div id="result-description">-</div>
+            </div>
+        </div>
+
+        <!-- Team Rosters Display -->
+        <div id="team-display" class="team-rosters">
+            <div id="home-team-details" class="team-roster">
+                <h3>Offense Team Roster</h3>
+                <ul id="home-team-offense"></ul>
+                <ul id="home-team-defense"></ul>
+            </div>
+            <div id="away-team-details" class="team-roster">
+                <h3>Defense Team Roster</h3>
+                <ul id="away-team-offense"></ul>
+                <ul id="away-team-defense"></ul>
+            </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="controls-section">
+            <h2>Game Controls</h2>
+            <div class="play-type-selector">
+                <label>
+                    <input type="radio" name="play-type" value="normal" checked>
+                    Normal
+                </label>
+                <label>
+                    <input type="radio" name="play-type" value="hurry">
+                    Hurry
+                </label>
+                <label>
+                    <input type="radio" name="play-type" value="control">
+                    Control
+                </label>
+            </div>
+            <button id="roll-dice" class="primary-button">Run Play</button>
         </div>
     </div>
-
-    <div class="controls-section">
-        <h2>Game Controls</h2>
-        <button id="roll-dice">Roll Dice</button>
-        <div class="dice-result" id="dice-result"></div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
-
-

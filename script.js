@@ -58,7 +58,6 @@ const teams = {
         },
     },
 };
-
 const footballCharts = {
   "Pass_vs_Pass": [
       { diceRoll: -3, playerRating: "2 or 3", outcomeIfMet: "pass for 3", outcomeElse: "pass for 1" },
@@ -78,9 +77,14 @@ const footballCharts = {
   // Additional charts here...
 };
 
+
 function populateTeamDropdowns() {
     const homeTeamDropdown = document.getElementById('home-team');
     const awayTeamDropdown = document.getElementById('away-team');
+
+    // Clear existing options first
+    homeTeamDropdown.innerHTML = '';
+    awayTeamDropdown.innerHTML = '';
 
     Object.keys(teams).forEach(team => {
         const option1 = document.createElement('option');
@@ -104,8 +108,13 @@ function displayTeamDetails(teamKey, elementId) {
         return;
     }
 
-    const offenseDetails = team.offense.map(player => `Rank: ${player.rank}, ${player.firstName} ${player.lastName}, ${player.position}, P:${player.P} R:${player.R} X:${player.X}`).join('<br>');
-    const defenseDetails = team.defense.map(player => `Rank: ${player.rank}, ${player.firstName} ${player.lastName}, ${player.position}, P:${player.P} R:${player.R} X:${player.X}`).join('<br>');
+    const offenseDetails = team.offense.map(player => 
+        `Rank: ${player.rank}, ${player.firstName} ${player.lastName}, ${player.position}, P:${player.P} R:${player.R} X:${player.X}`
+    ).join('<br>');
+
+    const defenseDetails = team.defense.map(player => 
+        `Rank: ${player.rank}, ${player.firstName} ${player.lastName}, ${player.position}, P:${player.P} R:${player.R} X:${player.X}`
+    ).join('<br>');
 
     element.innerHTML = `
         <h3>${teamKey}</h3>
@@ -115,19 +124,68 @@ function displayTeamDetails(teamKey, elementId) {
     `;
 }
 
-function rollDice() {
-    const redDie = Math.ceil(Math.random() * 6);
-    const whiteDie = Math.ceil(Math.random() * 6);
-    const twelveSidedDie = Math.ceil(Math.random() * 12);
+function executePlay() {
+    const chartType = document.querySelector('input[name="play-type"]:checked')?.value || 'normal';
 
-    const diceResult = `Red Die: ${redDie}, White Die: ${whiteDie}, 12-Sided Die: ${twelveSidedDie}`;
-    const chart = footballCharts["Pass_vs_Pass"];
-    const chartEntry = chart.find(entry => entry.diceRoll === twelveSidedDie - 6);
-    const chartResult = chartEntry ? chartEntry.outcomeIfMet : "No matching result";
-    document.getElementById('dice-result').textContent = `${diceResult} => Chart Result: ${chartResult}`;
+    const offenseDie = Math.ceil(Math.random() * 6);
+    const defenseDie = Math.ceil(Math.random() * 6);
+    const d12Result = Math.ceil(Math.random() * 12);
+
+    const offenseTeam = teams[document.getElementById('home-team').value];
+    const defenseTeam = teams[document.getElementById('away-team').value];
+
+    if (!offenseTeam || !defenseTeam) {
+        alert('Please select both teams before rolling');
+        return;
+    }
+
+    const offensePlay = offenseTeam.playCharts[chartType][offenseDie - 1];
+    const defensePlay = offenseTeam.playCharts[chartType][defenseDie - 1];
+
+    const finalOffensePlay = offensePlay === "R or X" ? (Math.random() < 0.5 ? "R" : "X") : offensePlay;
+
+    const chartKey = `${finalOffensePlay}_vs_${defensePlay}`;
+    const modifier = d12Result - 6;
+
+    const result = {
+        diceRolls: {
+            offense: offenseDie,
+            defense: defenseDie,
+            d12: d12Result
+        },
+        playCalls: {
+            offense: finalOffensePlay,
+            defense: defensePlay
+        },
+        chartKey: chartKey,
+        modifier: modifier
+    };
+
+    displayResults(result);
+    return result;
 }
 
-document.getElementById('roll-dice').addEventListener('click', rollDice);
+function displayResults(result) {
+    const resultDiv = document.getElementById('dice-result');
+    resultDiv.innerHTML = `
+        <h3>Play Result</h3>
+        <p><strong>Dice Rolls:</strong></p>
+        <ul>
+            <li>Offense Die (d6): ${result.diceRolls.offense}</li>
+            <li>Defense Die (d6): ${result.diceRolls.defense}</li>
+            <li>Modifier Die (d12): ${result.diceRolls.d12} (Modifier: ${result.modifier})</li>
+        </ul>
+        <p><strong>Play Calls:</strong></p>
+        <ul>
+            <li>Offense called: ${result.playCalls.offense}</li>
+            <li>Defense called: ${result.playCalls.defense}</li>
+        </ul>
+        <p><strong>Resulting Chart:</strong> ${result.chartKey}</p>
+    `;
+}
+
+// Set up all event listeners and initial state
+document.getElementById('roll-dice').addEventListener('click', executePlay);
 
 document.getElementById('home-team').addEventListener('change', (event) => {
     displayTeamDetails(event.target.value, 'home-team-details');
@@ -137,4 +195,5 @@ document.getElementById('away-team').addEventListener('change', (event) => {
     displayTeamDetails(event.target.value, 'away-team-details');
 });
 
+// Call populateTeamDropdowns directly
 populateTeamDropdowns();
